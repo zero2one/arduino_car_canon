@@ -61,7 +61,8 @@ int compassGetDirection() {
     dir = 360 + dir;
   }
 
-  Serial.println("Orientation : " + String(dir));
+  Serial.println("Direction : " + String(dir));
+  displayDirection(dir);
   return dir;
 }
 

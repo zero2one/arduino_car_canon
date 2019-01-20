@@ -28,14 +28,14 @@ void setup() {
   serialSetup();
   displaySetup();
   compassSetup();
-
-  displayDummy();
+  distanceSetup();
 }
 
 /**
  * Run the application.
  */
 void loop() {
-  displayDirection(compassGetDirection());
+  compassGetDirection();
+  distanceGet();
   delay(100);
 }

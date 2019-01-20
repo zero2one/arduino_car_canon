@@ -15,7 +15,7 @@
 // Display configuration.
 #define DISPLAY_WIDTH 128 // OLED display width, in pixels
 #define DISPLAY_HEIGHT 32 // OLED display height, in pixels
-#define DISPLAY_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define DISPLAY_RESET 4 // Reset pin # (or -1 if sharing Arduino reset pin)
 
 #define DISPLAY_LINE_1 0
 #define DISPLAY_LINE_2 14
