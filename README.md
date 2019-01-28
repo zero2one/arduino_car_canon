@@ -16,7 +16,7 @@ The car uses:
 * The compass sensor from the [Adafruit LSM9DS1 board] to get the heading.
 * One [Adafruit Ultrasone sensor] to measure distance.
 * One [Adafruit 128x32 OLED display].
-* Two motors and wheeld from the [Velleman 2 wheel drive chassis].
+* Two motors and wheels from the [Velleman 2 wheel drive chassis].
 
 [Adafruit Motor Shield v2.3]: https://www.adafruit.com/product/1438
 [Adafruit LSM9DS1 board]: https://www.adafruit.com/product/3387

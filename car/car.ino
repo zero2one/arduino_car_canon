@@ -44,30 +44,15 @@ void setup() {
   compassSetup();
   distanceSetup();
   motorSetup();
+
+  //locationSetup();
+
+  compassCalibrate();
 }
 
 /**
  * Run the application.
  */
 void loop() {
-  int dir = compassGetDirection();
-
-  motorTurnAroundRight(MOTOR_SPEED_TURN);
-  delay(50);
-  
-  int current = compassGetDirection();
-  while (dir != current) {
-    current = compassGetDirection();
-    distanceGet();
-    delay(100);
-  }
-
-  motorAllStop();
-
-  int time = 0;
-  while(time < 10000) {
-    compassGetDirection();
-    distanceGet();
-    time++;
-  }
+  compassReadHeading();
 }
