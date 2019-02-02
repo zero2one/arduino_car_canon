@@ -38,7 +38,6 @@ int distanceGet() {
   unsigned long duration = pulseIn(DISTANCE_PIN_ECHO, HIGH);
   int dist = duration / 29 / 2;
 
-  Serial.println("Direction : " + String(dist));
   displayDistance(dist);
   return dist;
 }

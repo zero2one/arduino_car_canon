@@ -44,15 +44,18 @@ void setup() {
   compassSetup();
   distanceSetup();
   motorSetup();
-
-  //locationSetup();
-
-  compassCalibrate();
+  locationSetup();
+  //compassCalibrate();
 }
 
 /**
  * Run the application.
  */
 void loop() {
-  compassReadHeading();
+  moveToXY(100, 100);
+  delay(2000);
+  moveToXY(40, 40);
+  delay(2000);
+  moveToXY(40, 60);
+  delay;
 }

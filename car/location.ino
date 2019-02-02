@@ -4,22 +4,16 @@
 
 
 /**
-  Min-Max
+  Direction delta.
 */
 #define LOCATION_DIRECTION_DELTA 5
-
-
-/**
-  Min-Max direction values.
-*/
-int locationDirectionMin = 0;
-int locationDirectionMax = 0;
+#define LOCATION_DISTANCE_DELTA 5
 
 /**
   X-Y direction values.
 */
-int locationDirectionX = 360;
-int locationDirectionY = 0;
+int locationDirectionX = 0;
+int locationDirectionY = 90;
 
 /**
   Current X-Y distance.
@@ -33,57 +27,38 @@ int locationDistanceY = 0;
   Setup the location variables.
 */
 void locationSetup() {
-  locationDirectionSetup();
+  debugStep("Location Setup");
+  locationDirectionInit();
 }
 
 /**
-  Setup X Y locations.
+  Init X Y locations based on current heading.
 */
-void locationDirectionSetup() {
-  // Set the X direction.
-  int current = compassGetDirection();
-  locationDirectionX = current;
-  locationDirectionSetupMinMax(current);
+void locationDirectionInit() {
+  debugStep("Location Direction Init");
 
-  // Turn around to get the min-max direction values.
-  motorTurnAroundRight(MOTOR_SPEED_TURN);
-  delay(1000);
-  while (!locationDirectionIsX()) {
-    current = compassGetDirection();
-    locationDirectionSetupMinMax(current);
-    delay(50);
-  }
-  motorAllStop();
-
-  // Calculate the Y direction.
-  int ninetyDegrees = floor((locationDirectionMax - locationDirectionMin) / 4);
-  Serial.println("Direction 90° : " + String(ninetyDegrees));
-
-  locationDirectionY = locationDirectionX + ninetyDegrees;
-  if (locationDirectionY > locationDirectionMax) {
-    locationDirectionY = locationDirectionY - locationDirectionMax + locationDirectionMin;
+  locationDirectionX = compassGetHeading();
+  locationDirectionY = locationDirectionX + 90;
+  if (locationDirectionY > 360) {
+    locationDirectionY = locationDirectionY - 360;
   }
 
   locationDirectionDebug();
-  delay(100000);
 }
 
 /**
-  Update the min & max direction.
-
-  Values will only be overwritten when they are:
-  - lower then min.
-  - greather the max.
-
-  @param int direction
+  Init X Y distances based on current location.
 */
-void locationDirectionSetupMinMax(int direction) {
-  if (locationDirectionMin > direction) {
-    locationDirectionMin = direction;
-  }
-  if (locationDirectionMax < direction) {
-    locationDirectionMax = direction;
-  }
+void locationDistanceInit() {
+  moveToDirectionX();
+  locationDistanceX = distanceGet();
+  delay(1000);
+  moveToDirectionY();
+  locationDistanceY = distanceGet();
+  delay(1000);
+  moveToDirectionX();
+
+  locationDistanceDebug();
 }
 
 /**
@@ -105,16 +80,26 @@ int locationDirectionGetY() {
 }
 
 /**
-  Check if the current location is X.
+  Check if the current direction is equal to given value.
+
+  @param int dir
+
+  @return bool
+*/
+bool locationDirectionIs(int dir) {
+  int dirCurrent = compassGetHeading();
+
+  return (dir - LOCATION_DIRECTION_DELTA) < dirCurrent
+         && (dir + LOCATION_DIRECTION_DELTA) > dirCurrent;
+}
+
+/**
+  Check if the current direction is X.
 
   @return bool
 */
 bool locationDirectionIsX() {
-  int dirCurrent = compassGetDirection();
-  int dirX = locationDirectionGetX();
-
-  return (dirX - LOCATION_DIRECTION_DELTA) < dirCurrent 
-    && (dirX + LOCATION_DIRECTION_DELTA) > dirCurrent;
+  return locationDirectionIs(locationDirectionGetX());
 }
 
 /**
@@ -123,19 +108,55 @@ bool locationDirectionIsX() {
   @return bool
 */
 bool locationDirectionIsY() {
-  int dirCurrent = compassGetDirection();
-  int dirY = locationDirectionGetY();
-
-  return (dirY - LOCATION_DIRECTION_DELTA) < dirCurrent 
-    && (dirY + LOCATION_DIRECTION_DELTA) > dirCurrent;
+  return locationDirectionIs(locationDirectionGetY());
 }
 
 /**
   Print out all measured & calculated values.
 */
 void locationDirectionDebug() {
-  Serial.println("Direction X : " + String(locationDirectionGetX()));
-  Serial.println("Direction Y : " + String(locationDirectionGetY()));
-  Serial.println("Direction Min : " + String(locationDirectionMin));
-  Serial.println("Direction Max : " + String(locationDirectionMax));
+  debugValue("X", locationDirectionGetX());
+  debugValue("Y", locationDirectionGetY());
+}
+
+/**
+  Get the current distance to X.
+
+  @return int
+*/
+int locationDistanceGetX() {
+  displayDistanceX(locationDistanceX);
+  return locationDistanceX;
+}
+
+/**
+  Get the current distance to Y.
+
+  @return int
+*/
+int locationDistanceGetY() {
+  displayDistanceY(locationDistanceY);
+  return locationDistanceY;
+}
+
+/**
+  Print out all measured & calculated values.
+*/
+void locationDistanceDebug() {
+  debugValue("X", locationDirectionGetX());
+  debugValue("Y", locationDirectionGetY());
+}
+
+/**
+  Check if the current location is X.
+
+  @param int dist
+    The requested distance.
+
+  @return bool
+*/
+bool locationDistanceIs(int dist) {
+  int distCurrent = distanceGet();
+  return (dist - LOCATION_DISTANCE_DELTA) < distCurrent
+         && (dist + LOCATION_DISTANCE_DELTA) > distCurrent;
 }

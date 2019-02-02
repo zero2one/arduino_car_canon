@@ -21,7 +21,9 @@
 #define DISPLAY_LINE_2 14
 #define DISPLAY_LINE_3 24
 
-// Create the dicplay object.
+#define DISPLAY_ON 0
+
+// Create the display object.
 Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, DISPLAY_RESET);
 
 
@@ -34,12 +36,16 @@ Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, DISPLAY_RESET);
  * - Run the displayInit method.
  */
 void displaySetup() {
-  Serial.println("Display Setup");
+  if (!DISPLAY_ON) {
+    return;
+  }
+  
+  debugStep("Display Setup");
   
   // Check if the display library works
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3C for 128x32
-    Serial.println(F("! SSD1306 allocation failed... Check your wiring!"));
-    Serial.println(F("  Script halted."));
+    debugError("! SSD1306 allocation failed... Check your wiring!");
+    debugError("  Script halted.");
     for (;;); // Don't proceed, loop forever.
   }
   
@@ -51,7 +57,11 @@ void displaySetup() {
  * Init the display with the fixed text parts.
  */
 void displayInit() {
-  Serial.println("Display Init");
+  if (!DISPLAY_ON) {
+    return;
+  }
+  
+  debugStep("Display Init");
 
   display.clearDisplay();
   display.setTextSize(1);      // Normal 1:1 pixel scale
@@ -95,6 +105,10 @@ void displayInit() {
  *   The value to write to the display.
  */
 void displayValue(int x, int y, String value) {
+  if (!DISPLAY_ON) {
+    return;
+  }
+  
   // Clear first the existing text.
   display.fillRect(x, y, 30, 7, BLACK); // (x, y, w, h)
 
@@ -111,10 +125,8 @@ void displayValue(int x, int y, String value) {
  *   The distance to put on the display.
  */
 void displayDistance(int distance) {
-  String dist = String(distance);
-  Serial.println("Distance : " + dist);
-  
-  displayValue(30, DISPLAY_LINE_1, dist);
+  debugValue("Distance", distance);
+  displayValue(30, DISPLAY_LINE_1, String(distance));
 }
 
 /**
@@ -124,9 +136,8 @@ void displayDistance(int distance) {
  *   The direction the car is pointing to.
  */
 void displayDirection(int direction) {
+  //debugValue("Direction", direction);
   String dir = String(direction);
-  Serial.println("Direction : " + dir);
-  
   displayValue(90, DISPLAY_LINE_1, dir);
 }
 
@@ -137,10 +148,8 @@ void displayDirection(int direction) {
  *   The distance in cm.
  */
 void displayDistanceX(int x) {
-  String distX = String(x);
-  Serial.println("Distance X : " + distX);
-
-  displayValue(42, DISPLAY_LINE_2, distX);
+  debugValue("Distance X", x);
+  displayValue(42, DISPLAY_LINE_2, String(x));
 }
 
 /**
@@ -150,10 +159,8 @@ void displayDistanceX(int x) {
  *   The distance in cm.
  */
 void displayDistanceY(int y) {
-  String distY = String(y);
-  Serial.println("Distance Y : " + distY);
-
-  displayValue(90, DISPLAY_LINE_2, distY);
+  debugValue("Distance Y", y);
+  displayValue(90, DISPLAY_LINE_2, String(y));
 }
 
 /**
@@ -163,10 +170,8 @@ void displayDistanceY(int y) {
  *   The target X-distance in cm.
   */
 void displayTargetX(int x) {
-  String targetX = String(x);
-  Serial.println("Target X : " + targetX);
-
-  displayValue(42, DISPLAY_LINE_3, targetX);
+  debugValue("Target X", x);
+  displayValue(42, DISPLAY_LINE_3, String(x));
 }
 
 /**
@@ -176,10 +181,8 @@ void displayTargetX(int x) {
  *   The target Y-distance in cm.
   */
 void displayTargetY(int y) {
-  String targetY = String(y);
-  Serial.println("Target Y : " + targetY);
-
-  displayValue(90, DISPLAY_LINE_3, targetY);
+  debugValue("Target Y", y);
+  displayValue(90, DISPLAY_LINE_3, String(y));
 }
 
 /**

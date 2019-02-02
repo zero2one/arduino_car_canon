@@ -9,4 +9,5 @@
  */
 void serialSetup() {
   Serial.begin(9600);
+  debugStep("Serial setup");
 }

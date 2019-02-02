@@ -36,7 +36,7 @@ Adafruit_DCMotor *MotorLeft = AFMS.getMotor(3);
 #define MOTOR_SPEED_RIGHT 2
 
 // Enable/Disable debugging.
-#define MOTOR_DEBUG 1
+#define MOTOR_DEBUG 0
 
 
 
@@ -44,6 +44,7 @@ Adafruit_DCMotor *MotorLeft = AFMS.getMotor(3);
  * Setup the motor shield.
  */
 void motorSetup() {
+  debugStep("Motor Setup");
   AFMS.begin();  
 }
 
