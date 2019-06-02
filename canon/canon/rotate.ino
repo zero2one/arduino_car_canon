@@ -11,8 +11,11 @@ uint16_t rotate_pos;
    Setup the rotate servo.
 */
 void rotateSetup() {
+  debugStep("Setup Rotate");
+
   rotate_pos = servoGetMiddle();
   servoTo(ROTATE_SERVO, rotate_pos);
+  debugValue("Rotation value", 90);
 }
 
 /**
@@ -25,7 +28,7 @@ void rotateTo(int degrees) {
   uint16_t rotateTo;
   rotateTo = servoDegreesToPulselen(degrees);
   debugValue("Rotate to", degrees);
-  
+
   if (rotate_pos == rotateTo) {
     debugText("Rotate is already in proper direction.");
     return;
@@ -42,22 +45,17 @@ void rotateTo(int degrees) {
   }
 }
 
+/**
+   Test the rotation control.
+*/
 void rotateTest() {
   debugStep("Test rotate");
-  
-  rotateTo(60);
-  delay(1000);
-  rotateTo(70);
-  delay(1000);
-  rotateTo(80);
-  delay(1000);
-  rotateTo(90);
-  delay(1000);
-  rotateTo(110);
-  delay(1000);
-  rotateTo(120);
-  delay(1000);
-  
+
+  for (int degrees = 60; degrees < 121; degrees += 2) {
+    rotateTo(degrees);
+    delay(1000);
+  }
+
   // Back to middle.
   debugStep("Rotate back to start position");
   rotateTo(90);

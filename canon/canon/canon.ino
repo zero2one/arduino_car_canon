@@ -14,16 +14,22 @@
  */
 void setup() {
   serialSetup();
-  
+
+  debugStep("Setup Canon");
+  launchSetup();
   servoSetup();
   rotateSetup();
   elevateSetup();
+
+  delay(2000);
+  debugStep("Setup canon : OK");
 }
 
 /**
  * Run the application.
  */
 void loop() {
+  launchTest();
   rotateTest();
   elevateTest();
 }

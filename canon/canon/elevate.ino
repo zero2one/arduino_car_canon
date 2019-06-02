@@ -2,7 +2,7 @@
    Code to elevate the canon.
 */
 
-#define ELEVATE_SERVO  1
+#define ELEVATE_SERVO  4
 
 uint16_t elevate_pos;
 
@@ -10,8 +10,11 @@ uint16_t elevate_pos;
    Setup the elevate servo.
 */
 void elevateSetup() {
+  debugStep("Setup Elevate");
+
   elevate_pos = servoGetMax();
   servoTo(ELEVATE_SERVO, elevate_pos);
+  debugValue("Elevation value", 0);
 }
 
 /**
@@ -28,10 +31,10 @@ void elevateTo(int degrees) {
 
   debugValue("Elevate to", degrees);
   degrees = 180 - degrees;
-  
+
   uint16_t elevateTo;
   elevateTo = servoDegreesToPulselen(degrees);
-  
+
   if (elevate_pos == rotateTo) {
     debugText("Rotate is already in proper direction.");
     return;
@@ -48,29 +51,16 @@ void elevateTo(int degrees) {
   }
 }
 
+/**
+   Test the elevate servo.
+*/
 void elevateTest() {
   debugStep("Test elevate");
-  
-  elevateTo(0);
-  delay(1000);
-  elevateTo(4);
-  delay(1000);
-  elevateTo(8);
-  delay(1000);
-  elevateTo(12);
-  delay(1000);
-  elevateTo(16);
-  delay(1000);
-  elevateTo(20);
-  delay(1000);
-  elevateTo(24);
-  delay(1000);
-  elevateTo(28);
-  delay(1000);
-  elevateTo(32);
-  delay(1000);
-  
-  // Back to start.
+  for (int degrees = 0; degrees < 31; degrees += 2) {
+    elevateTo(degrees);
+    delay(1000);
+  }
+
   debugStep("Elevate back to start position");
   elevateTo(0);
   delay(1000);
